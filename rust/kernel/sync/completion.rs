@@ -90,6 +90,17 @@ impl Completion {
         self.inner.get()
     }
 
+    /// Signal a single task waiting on this completion.
+    ///
+    /// This method wakes up a single task waiting on this completion.
+    /// If no task is currently waiting, the next
+    /// [`Completion::wait_for_completion`] returns immediately.
+    #[inline]
+    pub fn complete(&self) {
+        // SAFETY: `self.as_raw()` is a pointer to a valid `struct completion`.
+        unsafe { bindings::complete(self.as_raw()) };
+    }
+
     /// Signal all tasks waiting on this completion.
     ///
     /// This method wakes up all tasks waiting on this completion; after this operation the
@@ -105,7 +116,7 @@ impl Completion {
     /// This method waits for the completion of a task; it is not interruptible and there is no
     /// timeout.
     ///
-    /// See also [`Completion::complete_all`].
+    /// See also [`Completion::complete`] and [`Completion::complete_all`].
     #[inline]
     pub fn wait_for_completion(&self) {
         // SAFETY: `self.as_raw()` is a pointer to a valid `struct completion`.
