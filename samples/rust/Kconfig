@@ -107,6 +107,21 @@ config SAMPLE_RUST_I2C_CLIENT
 
 	  If unsure, say N.
 
+config SAMPLE_RUST_DRIVER_EDU
+	tristate "EDU Driver"
+	depends on PCI && 64BIT
+	help
+	  This option builds the Rust PCI driver sample for QEMU's EDU device.
+	  Start QEMU with -device edu to use this sample.
+	  The sample requires 64BIT because it accesses the device's DMA
+	  registers using 64-bit MMIO operations, which the Rust I/O
+	  abstractions only support on 64-bit kernels.
+
+	  To compile this as a module, choose M here:
+	  the module will be called rust_driver_edu.
+
+	  If unsure, say N.
+
 config SAMPLE_RUST_DRIVER_PLATFORM
 	tristate "Platform Driver"
 	help
