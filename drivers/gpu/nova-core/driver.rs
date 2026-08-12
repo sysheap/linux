@@ -38,6 +38,8 @@ pub(crate) struct NovaCore<'bound> {
     pub(crate) gpu: Gpu<'bound>,
     bar: pci::Bar<'bound, BAR0_SIZE>,
     bar1: pci::Bar<'bound>,
+    // Declared last so the device stays enabled until everything above is torn down.
+    _enable: pci::DeviceEnableGuard<'bound>,
 }
 
 pub(crate) struct NovaCoreDriver;
@@ -103,9 +105,10 @@ impl pci::Driver for NovaCoreDriver {
         dev_dbg!(pdev, "Probe Nova Core GPU driver.\n");
 
         try_pin_init!(NovaCore {
-            _: {
-                pdev.enable_device_mem()?;
+            _enable: {
+                let enable = pdev.enable_device()?;
                 pdev.set_master();
+                enable
             },
 
             bar: pdev.iomap_region_sized::<BAR0_SIZE>(0, c"nova-core/bar0")?,
