@@ -107,7 +107,7 @@ impl pci::Driver for NovaCoreDriver {
         try_pin_init!(NovaCore {
             _enable: {
                 let enable = pdev.enable_device()?;
-                pdev.set_master();
+                pdev.set_master(&enable)?;
                 enable
             },
 

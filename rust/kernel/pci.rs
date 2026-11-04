@@ -516,10 +516,18 @@ impl<'a> Device<device::Core<'a>> {
     }
 
     /// Enable bus-mastering for this device.
+    ///
+    /// Returns `EINVAL` if `enable` belongs to another device.
     #[inline]
-    pub fn set_master(&self) {
-        // SAFETY: `self.as_raw` is guaranteed to be a pointer to a valid `struct pci_dev`.
+    pub fn set_master(&self, enable: &DeviceEnableGuard<'_>) -> Result {
+        if self.as_raw() != enable.dev.as_raw() {
+            return Err(EINVAL);
+        }
+
+        // SAFETY: `self` is a valid device in core context, and `enable`
+        // keeps this device enabled for the duration of the call.
         unsafe { bindings::pci_set_master(self.as_raw()) };
+        Ok(())
     }
 }
 
