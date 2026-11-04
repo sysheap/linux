@@ -418,6 +418,7 @@ define_all_pci_vendors! {
     CYCLADES                 = bindings::PCI_VENDOR_ID_CYCLADES,                 // 0x120e
     O2                       = bindings::PCI_VENDOR_ID_O2,                       // 0x1217
     THREEDX                  = bindings::PCI_VENDOR_ID_3DFX,                     // 0x121a
+    QEMU                     = bindings::PCI_VENDOR_ID_QEMU,                     // 0x1234
     AVM                      = bindings::PCI_VENDOR_ID_AVM,                      // 0x1244
     STALLION                 = bindings::PCI_VENDOR_ID_STALLION,                 // 0x124d
     AT                       = bindings::PCI_VENDOR_ID_AT,                       // 0x1259
